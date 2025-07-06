@@ -47,14 +47,17 @@ export default function QuestionPanel({
 
   const startRecording = () => {
     if (typeof window !== "undefined" && "webkitSpeechRecognition" in window) {
-      const SpeechRecognition =
-        (
-          window as typeof window & {
-            webkitSpeechRecognition?: typeof window.SpeechRecognition;
-          }
-        ).webkitSpeechRecognition || window.SpeechRecognition;
+      const SpeechRecognitionAPI =
+        typeof window !== "undefined"
+          ? window.SpeechRecognition || window.webkitSpeechRecognition
+          : undefined;
 
-      const recognition = new SpeechRecognition();
+      if (!SpeechRecognitionAPI) {
+        console.error("SpeechRecognition is not supported in this browser.");
+        return;
+      }
+
+      const recognition = new SpeechRecognitionAPI();
 
       recognition.continuous = true;
       recognition.interimResults = true;
