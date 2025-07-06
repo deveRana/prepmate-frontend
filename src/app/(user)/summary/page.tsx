@@ -20,7 +20,7 @@ export default function InterviewSummaryPage() {
             Your Interview Recap
           </h1>
           <p className="text-gray-600 text-lg">
-            Nice work! Here's how it went. 🎯
+            Nice work! Here&apos; how it went. 🎯
           </p>
         </div>
 

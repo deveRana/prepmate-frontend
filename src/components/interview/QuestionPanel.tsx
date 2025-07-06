@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import { Mic, StopCircle, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useRouter } from "next/navigation";
 import QuestionHeader from "@components/interview/quesion-panel/QuestionHeader";
 import NavigationControls from "@components/interview/quesion-panel/NavigationControls";
 import SubmitDialog from "@components/interview/quesion-panel/SubmitDialog";
@@ -30,12 +29,10 @@ export default function QuestionPanel({
     new Array(questions.length).fill("")
   );
 
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   const fullTranscriptRef = useRef<string[]>(
     new Array(questions.length).fill("")
   );
-
-  const router = useRouter();
 
   useEffect(() => {
     // Sync current question with stored answer
@@ -46,11 +43,17 @@ export default function QuestionPanel({
       updated[currentIndex] = recordedAnswers[currentIndex] || "";
       return updated;
     });
-  }, [currentIndex]);
+  }, [currentIndex, recordedAnswers]);
 
   const startRecording = () => {
     if (typeof window !== "undefined" && "webkitSpeechRecognition" in window) {
-      const SpeechRecognition = (window as any).webkitSpeechRecognition;
+      const SpeechRecognition =
+        (
+          window as typeof window & {
+            webkitSpeechRecognition?: typeof window.SpeechRecognition;
+          }
+        ).webkitSpeechRecognition || window.SpeechRecognition;
+
       const recognition = new SpeechRecognition();
 
       recognition.continuous = true;
@@ -64,7 +67,7 @@ export default function QuestionPanel({
         return updated;
       });
 
-      recognition.onresult = (event: any) => {
+      recognition.onresult = (event: SpeechRecognitionEvent) => {
         let interim = "";
         for (let i = event.resultIndex; i < event.results.length; ++i) {
           const transcript = event.results[i][0].transcript;
@@ -83,7 +86,7 @@ export default function QuestionPanel({
         });
       };
 
-      recognition.onerror = (event: any) => {
+      recognition.onerror = (event: SpeechRecognitionErrorEvent) => {
         console.error("Speech recognition error:", event);
         setIsRecording(false);
       };

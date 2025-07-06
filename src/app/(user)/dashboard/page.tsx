@@ -28,7 +28,7 @@ export default function DashboardPage() {
           Welcome, <span className="text-purple-600">{userName}</span> 👋
         </h1>
         <p className="text-gray-600 text-lg">
-          Here's your personalized dashboard overview
+          Here&apos; your personalized dashboard overview
         </p>
       </section>
 

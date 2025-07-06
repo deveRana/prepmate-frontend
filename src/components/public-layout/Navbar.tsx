@@ -3,16 +3,11 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
+import { navLinks } from "../../../constants/navLinks";
 
 export default function Navbar() {
   const [activeSection, setActiveSection] = useState("home");
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const navLinks = [
-    { name: "Home", href: "home" },
-    { name: "Features", href: "features" },
-    { name: "How It Works", href: "howitworks" },
-  ];
 
   useEffect(() => {
     const sectionOffsets = navLinks.map((link) => {

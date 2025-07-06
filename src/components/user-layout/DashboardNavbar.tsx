@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getCurrentUser, logout } from "@/lib/auth";
 import { Menu, X } from "lucide-react";
+import Image from "next/image";
 
 export default function DashboardNavbar() {
   const router = useRouter();
@@ -44,10 +45,12 @@ export default function DashboardNavbar() {
             <p className="text-sm font-medium text-gray-800">{user?.name}</p>
             <p className="text-xs text-gray-500">{user?.email}</p>
           </div>
-          <img
-            src={"https://i.pravatar.cc/150?img=12"}
+          <Image
+            width={40}
+            height={40}
+            src="/assets/userImg.jpg"
             alt="Avatar"
-            className="w-10 h-10 rounded-full object-cover border"
+            className=" rounded-full object-cover border"
           />
 
           <button
