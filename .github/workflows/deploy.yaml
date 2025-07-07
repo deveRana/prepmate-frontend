@@ -29,7 +29,9 @@ jobs:
           echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 -d > ~/.kube/config
 
       - name: Switch to EKS context
-        run: kubectl config use-context cli-rana@prepmate-cluster.us-east-1.eksctl.io
+        run: |
+          CONTEXT=$(kubectl config get-contexts -o name | head -n 1)
+          kubectl config use-context "$CONTEXT"
 
       - name: Deploy to EKS
         run: |
