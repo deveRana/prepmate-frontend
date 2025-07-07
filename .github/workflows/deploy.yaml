@@ -11,33 +11,41 @@ jobs:
     environment: production
 
     steps:
-      - name: Checkout code
+      - name: 📥 Checkout code
         uses: actions/checkout@v3
 
-      - name: Log in to Docker Hub
+      - name: 📝 Set image tag to short Git SHA
+        id: vars
+        run: echo "IMAGE_TAG=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: 🔐 Log in to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      - name: Build Docker image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/prepmate-frontend:latest .
+      - name: 🛠️ Build Docker image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/prepmate-frontend:${{ env.IMAGE_TAG }} .
 
-      - name: Push Docker image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/prepmate-frontend:latest
+      - name: 🚀 Push Docker image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/prepmate-frontend:${{ env.IMAGE_TAG }}
 
-      - name: Set up kubeconfig
+      - name: 🧠 Update deployment image tag
+        run: |
+          sed -i "s|image:.*|image: ${{ secrets.DOCKER_USERNAME }}/prepmate-frontend:${{ env.IMAGE_TAG }}|" k8s/deployment.yaml
+
+      - name: 🧾 Set up kubeconfig
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
         run: |
           mkdir -p ~/.kube
           echo "$KUBE_CONFIG_DATA" | base64 --decode > ~/.kube/config
 
-      - name: Configure AWS credentials
+      - name: 🔐 Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Deploy to EKS
+      - name: 📦 Deploy to EKS
         run: |
           kubectl apply -f k8s/deployment.yaml
           kubectl apply -f k8s/service.yaml
