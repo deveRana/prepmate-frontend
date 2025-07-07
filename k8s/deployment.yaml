@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prepmate-frontend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: prepmate-frontend
+  template:
+    metadata:
+      labels:
+        app: prepmate-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: rana0/prepmate-frontend:latest
+          ports:
+            - containerPort: 3000
