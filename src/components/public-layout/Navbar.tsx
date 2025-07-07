@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
-import { navLinks } from "../../../constants/navLinks";
+import { navLinks } from "@constants/navLinks";
 
 export default function Navbar() {
   const [activeSection, setActiveSection] = useState("home");
@@ -47,7 +47,7 @@ export default function Navbar() {
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
         {/* Logo */}
         <a href="#home" className="text-2xl font-bold text-purple-600">
-          PrepMate<span className="text-gray-900">AI</span>
+          PrepMate<span className="text-gray-900">AI RANA</span>
         </a>
 
         {/* Desktop nav */}

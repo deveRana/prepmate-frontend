@@ -1,4 +1,4 @@
-prep-mate-ai/
+prep-mate-ai/src/
 ├── app/
 ├── (public)/                # Public layout routes
 │   ├── layout.tsx
